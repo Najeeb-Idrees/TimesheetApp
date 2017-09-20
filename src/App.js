@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
 import LoginForm from './LoginForm';
 
 class App extends Component {

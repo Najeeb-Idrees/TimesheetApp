@@ -1,64 +1,97 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { View, Text } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
-import { Hideo, Kohana } from 'react-native-textinput-effects';
+import { Hideo } from 'react-native-textinput-effects';
+import { Button } from './components/common';
 
 export default class LoginForm extends Component {
+
+  state = { username: '', password: '' };
+
+  onLoginPress() {
+    const { username, password } = this.state;
+
+    console.log(username);
+    console.log(password);
+  }
+
   render() {
     return (
-      <ScrollView
-        style={styles.container}
-      >
-       
-        <View style={styles.card}>
+
+      <View style={styles.containerStyle}>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+        <Text> TimeSheet App!! </Text>
+
+
+        <View
+          style={styles.loginLayoutStyle}
+        >
           <Hideo
             iconClass={FontAwesomeIcon}
             iconName='envelope'
             iconColor='white'
-            iconBackgroundColor={'#859588'}
+            placeholder="Username or Email"
+            iconBackgroundColor={'#A8A099'}
             inputStyle={{ color: '#464949' }}
-            iconSize={30}
-            onChangeText={(text) => { this.setState({textValue: text})}}
+            value={this.state.username}
+            onChangeText={(text) => { this.setState({ username: text }) }}
           />
-
           <Hideo
             style={styles.input}
             iconClass={FontAwesomeIcon}
             iconName='user'
             iconColor='white'
+            placeholder="Password"
             secureTextEntry
             iconBackgroundColor={'#A8A099'}
             inputStyle={{ color: '#464949' }}
-            onChangeText={(text) => { this.setState({textValue: text}) }}
+            value={this.state.password}
+            onChangeText={(text) => { this.setState({ password: text }) }}
           />
 
-          <Kohana
-    style={{ backgroundColor: '#f9f5ed' }}
-    label={'Username or Email'}
-    iconClass={MaterialsIcon}
-    iconName={'directions-bus'}
-    iconColor={'#f4d29a'}
-    labelStyle={{ color: '#91627b' }}
-    inputStyle={{ color: '#91627b' }}
-    useNativeDriver
-  />
+          <Button
+            onPress={this.onLoginPress.bind(this)}
+            btnStyle={styles.btnStyle}
+          >
+            Login
+        </Button>
+
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
+const styles = {
+  containerStyle: {
     flex: 1,
-    paddingTop: 24,
     backgroundColor: '#24BE9D',
+    paddingLeft: 16,
+    paddingRight: 16,
   },
-  card: {
-    padding: 16,
+  loginLayoutStyle: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    alignSelf: 'center',
+    left: 16,
+    right: 16,
   },
   input: {
     marginTop: 4,
   },
-});
+  btnStyle: {
+    flex: 0,
+    marginTop: 10,
+    marginLeft: 0,
+    marginRight: 0,
+
+  }
+};
