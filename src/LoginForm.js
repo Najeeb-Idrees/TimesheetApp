@@ -2,19 +2,31 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Hideo } from 'react-native-textinput-effects';
-import { Button } from './components/common';
+import { Button, Confirm } from './components/common';
 
 export default class LoginForm extends Component {
 
-  state = { username: '', password: '' };
+  state = { username: '', password: '', showModal: false };
 
   onLoginPress() {
     const { username, password } = this.state;
 
-    console.log(username);
-    console.log(password);
+    if (username !== '' && password !== '') {
+      console.log(username);
+      console.log(password);
+    }
+    else {
+      this.setState({ showModal: true });
+    }
   }
 
+  onAccept() {
+    this.setState({ showModal: false });
+  }
+
+  onDecline() {
+    this.setState({ showModal: false });
+  }
   render() {
     return (
 
@@ -47,9 +59,19 @@ export default class LoginForm extends Component {
         <Button
           onPress={this.onLoginPress.bind(this)}
           btnStyle={styles.btnStyle}
+          txtStyle={styles.txtStyle}
         >
           Login
         </Button>
+
+        <Confirm
+          visible={this.state.showModal}
+          onAccept={this.onAccept.bind(this)}
+          onDecline={this.onDecline.bind(this)}
+          numOfBtns='1'
+        >
+          Please enter value
+                </Confirm>
 
       </View>
     );
@@ -73,6 +95,10 @@ const styles = {
     marginTop: 10,
     marginLeft: 0,
     marginRight: 0,
-
+    borderColor: '#17816B',
+    backgroundColor: '#17816B',
+  },
+  txtStyle: {
+    color: '#fff',
   }
 };
