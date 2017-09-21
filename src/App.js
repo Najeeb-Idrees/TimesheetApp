@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import LoginForm from './LoginForm';
+import Router from './Router';
 
 class App extends Component {
     render() {
         return (
-            <LoginForm />
+            <Router />
         );
     }
 }

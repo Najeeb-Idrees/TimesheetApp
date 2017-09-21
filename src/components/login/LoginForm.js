@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Alert } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Hideo } from 'react-native-textinput-effects';
-import { Button, Confirm } from './components/common';
-
+import { Actions } from 'react-native-router-flux';
+import { Button, Confirm } from '../../components/common';
 export default class LoginForm extends Component {
 
   state = { username: '', password: '', showModal: false };
@@ -14,9 +14,13 @@ export default class LoginForm extends Component {
     if (username !== '' && password !== '') {
       console.log(username);
       console.log(password);
-    }
-    else {
-      this.setState({ showModal: true });
+
+      Actions.main();
+    } else if (username === '') {
+      Alert.alert('Invalid Field', 'Please enter username');
+      // this.setState({ showModal: true });
+    } else if (password === '') {
+      Alert.alert('Invalid Field', 'Please enter password');
     }
   }
 
@@ -24,14 +28,15 @@ export default class LoginForm extends Component {
     this.setState({ showModal: false });
   }
 
-  onDecline() {
-    this.setState({ showModal: false });
-  }
+  // onDecline() {
+  //   this.setState({ showModal: false });
+  // }
   render() {
     return (
 
       <View
         style={styles.loginLayoutStyle}
+        contentContainerStyle={styles.content}
       >
         <Hideo
           iconClass={FontAwesomeIcon}
@@ -67,7 +72,6 @@ export default class LoginForm extends Component {
         <Confirm
           visible={this.state.showModal}
           onAccept={this.onAccept.bind(this)}
-          onDecline={this.onDecline.bind(this)}
           numOfBtns='1'
         >
           Please enter value
@@ -81,11 +85,11 @@ export default class LoginForm extends Component {
 const styles = {
   loginLayoutStyle: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#24BE9D',
     paddingLeft: 16,
     paddingRight: 16,
+  },
+  content: {
+    flex: 0,
   },
   input: {
     marginTop: 4,
