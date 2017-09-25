@@ -4,12 +4,13 @@ import Login from './components/login/Login';
 import MissingTSList from './components/MissingTSList';
 import { LightSeaGreen } from './colors';
 import CreateTS from './components/logTime/CreateTS';
+import test from './components/logTime/test';
 
 const RouterComponent = () => {
     return (
         <Router>
 
-            <Scene key="auth">
+            {/* <Scene key="auth">
                 <Scene
                     key="login"
                     component={Login}
@@ -19,7 +20,7 @@ const RouterComponent = () => {
                     panHandlers={null}
                     hideNavBar="false"
                 />
-            </Scene>
+            </Scene> */}
 
 
             <Scene key="main">
@@ -37,6 +38,7 @@ const RouterComponent = () => {
                     component={CreateTS}
                     gestureEnabled={false}
                     panHandlers={null}
+                    initial
                     title="Log Time"
                     navigationBarStyle={{ backgroundColor: LightSeaGreen }}
                     titleStyle={{ color: '#fff', fontWeight: 'bold' }}

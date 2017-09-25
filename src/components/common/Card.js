@@ -3,14 +3,15 @@ import { View, StyleSheet, Text } from 'react-native';
 
 const Card = (props) => {
 
+    const { containerStyle } = styles;
     return (
-        <View style={styles.containerStyle}>
+        <View style={[containerStyle, props.cardStyle]}>
             {props.children}
         </View>
     );
 };
 
-const styles = StyleSheet.create({
+const styles = {
 
     containerStyle: {
         borderWidth: 1,
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
         marginRight: 5,
         marginTop: 10,
     }
-});
+};
 
 export { Card };
