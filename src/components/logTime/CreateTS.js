@@ -14,16 +14,25 @@ class CreateTS extends Component {
             activity: 'Select Activity',
             hour: '',
             task: '',
-            timesheet: []
+            timesheet: [],
+            dataSource: []
         };
 
-        const ds = new ListView.DataSource({
+        this.ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
 
-        this.dataSource = ds.cloneWithRows(this.state.timesheet);
+        this.state.dataSource = this.ds.cloneWithRows(this.state.timesheet);
+
+        console.log('Here at constructor!');
     }
 
+    // componentDidMount() {
+    //     this.setState({
+    //         dataSource: this.ds.cloneWithRows(this.state.timesheet)
+    //     });
+    //     console.log('Here at component did mount!');
+    // }
 
     onAddTSPress() {
         const { project, activity, task, hour } = this.state;
@@ -33,14 +42,34 @@ class CreateTS extends Component {
         console.log(task);
         console.log(hour);
 
-        this.setState({
-            timesheet: [...this.state.timesheet, project]
-        });
+        console.log(`${this.state.timesheet}`);
+        this.setState({ timesheet: 'abcdef' });
+        // this.setState({
+        //     timesheet: [...this.state.timesheet], project
+        // });
+
+        console.log(`${this.state.timesheet}`);
+
+        this.setState({ dataSource: this.ds.cloneWithRows(this.state.timesheet) });
+        console.log('Here button press!');
     }
 
     renderRow(data) {
-        console.log(`${data} $""`);
+        console.log('Here at render row!');
+        console.log(`${data}""`);
         return <Text> {data} </Text>;
+    }
+
+    renderList() {
+        console.log('Here at render list!!');
+        return (
+            <ListView
+                style={styles.listViewContianer}
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow}
+                enableEmptySections
+            />
+        );
     }
 
     render() {
@@ -89,7 +118,6 @@ class CreateTS extends Component {
                             </View>
                         </View>
                     </CardSection>
-
                     <CardSection>
                         <View style={containerStyle}>
                             <Text style={labelStyle}> Activity </Text>
@@ -145,7 +173,6 @@ class CreateTS extends Component {
                         </View>
                     </CardSection>
                 </Card>
-                {/* <CardSection> */}
                 <Button
                     onPress={this.onAddTSPress.bind(this)}
                     btnStyle={styles.btnStyle}
@@ -153,15 +180,8 @@ class CreateTS extends Component {
                 >
                     Add
                 </Button>
-                {/* </CardSection> */}
-                {/* </Card > */}
 
-                <ListView
-                    style={styles.listViewContianer}
-                    dataSource={this.dataSource}
-                    renderRow={this.renderRow}
-                    enableEmptySections
-                />
+                {this.renderList()}
 
             </View >
         );
