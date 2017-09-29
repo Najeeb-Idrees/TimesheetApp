@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, Alert, ListView } from 'react-native';
+import { Text, View, TextInput, ScrollView, ListView } from 'react-native';
 import { Card, CardSection, Button } from '../common';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ModalPicker from 'react-native-modal-picker';
+import CreateTSListItem from './CreateTSListItem';
+
 
 class CreateTS extends Component {
 
     constructor(props) {
         super(props);
+
+        this.ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+        });
 
         this.state = {
             project: 'Select Project',
@@ -15,24 +21,11 @@ class CreateTS extends Component {
             hour: '',
             task: '',
             timesheet: [],
-            dataSource: []
+            dataSource: this.ds.cloneWithRows([])
         };
-
-        this.ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-        });
-
-        this.state.dataSource = this.ds.cloneWithRows(this.state.timesheet);
 
         console.log('Here at constructor!');
     }
-
-    // componentDidMount() {
-    //     this.setState({
-    //         dataSource: this.ds.cloneWithRows(this.state.timesheet)
-    //     });
-    //     console.log('Here at component did mount!');
-    // }
 
     onAddTSPress() {
         const { project, activity, task, hour } = this.state;
@@ -42,32 +35,23 @@ class CreateTS extends Component {
         console.log(task);
         console.log(hour);
 
-        console.log(`${this.state.timesheet}`);
-        this.setState({ timesheet: 'abcdef' });
-        // this.setState({
-        //     timesheet: [...this.state.timesheet], project
-        // });
+        this.setState({
+            timesheet: [...this.state.timesheet, { time: { project, activity, task, hour } }]
+        }, function () {
+            console.log(`${this.state.timesheet}`);
 
-        console.log(`${this.state.timesheet}`);
+            const newDataSource = this.ds.cloneWithRows(this.state.timesheet);
+            this.setState({ dataSource: newDataSource });
+        });
 
-        this.setState({ dataSource: this.ds.cloneWithRows(this.state.timesheet) });
         console.log('Here button press!');
     }
 
     renderRow(data) {
-        console.log('Here at render row!');
         console.log(`${data}""`);
-        return <Text> {data} </Text>;
-    }
-
-    renderList() {
-        console.log('Here at render list!!');
         return (
-            <ListView
-                style={styles.listViewContianer}
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow}
-                enableEmptySections
+            <CreateTSListItem
+                singleEntry={data.time}
             />
         );
     }
@@ -76,114 +60,136 @@ class CreateTS extends Component {
         let index = 0;
         const data = [
             { key: index++, section: true, label: 'Projects' },
-            { key: index++, label: 'Project1' },
-            { key: index++, label: 'Project2' },
-            { key: index++, label: 'Project3' },
-            { key: index++, label: 'Project4' },
-            { key: index++, label: 'Project5' },
-            { key: index++, section: true, label: 'Projectss' },
-            { key: index++, label: 'Project1' },
-            { key: index++, label: 'Project2' },
+            { key: index++, label: 'FOAS' },
+            { key: index++, label: 'CSymplicity' },
+            { key: index++, label: 'Cloud Vote' },
+            { key: index++, label: 'MCI Assist' },
+            { key: index++, label: 'TS HR' },
+            { key: index++, label: 'Secure Browser/Messaging' },
+            { key: index++, label: 'Test Taker App' },
+            { key: index++, label: 'HealthSlate Pro' },
+            { key: index++, label: 'Health Touch' },
+            { key: index++, label: 'Test' },
+        ];
+
+
+        let index1 = 0;
+        const data1 = [
+            { key: index1++, section: true, label: 'Activities' },
+            { key: index1++, label: 'Coding' },
+            { key: index1++, label: 'Testing' },
+            { key: index1++, label: 'Outage' },
+            { key: index1++, label: 'Design' },
+            { key: index1++, label: 'User Interface Creation' },
+            { key: index1++, label: 'Scrum' },
+            { key: index1++, label: 'Test Cases' },
         ];
 
         const { containerStyle, labelStyle, valueTextStyle, cardSty, iconStyle, inputContainerStyles } = styles;
 
         return (
 
-            <View>
-                <Card
-                    cardStyle={cardSty}
-                >
-                    <CardSection>
-                        <View style={containerStyle}>
-                            <Text style={labelStyle}> Project </Text>
+            <ScrollView>
+                <View>
+                    <Card
+                        cardStyle={cardSty}
+                    >
+                        <CardSection>
+                            <View style={containerStyle}>
+                                <Text style={labelStyle}> Project </Text>
 
-                            <View style={inputContainerStyles}>
-                                <ModalPicker
-                                    style={{ flex: 1, flexDirection: 'row', }}
-                                    data={data}
-                                    onChange={(option) => { this.setState({ project: option.label }) }}>
+                                <View style={inputContainerStyles}>
+                                    <ModalPicker
+                                        style={{ flex: 1, flexDirection: 'row', }}
+                                        data={data}
+                                        onChange={(option) => { this.setState({ project: option.label }) }}>
 
-                                    <Text
+                                        <Text
+                                            style={valueTextStyle}
+                                        >
+                                            {this.state.project}
+                                        </Text>
+
+                                    </ModalPicker>
+                                    <Icon
+                                        style={iconStyle}
+                                        name='angle-down' />
+
+                                </View>
+                            </View>
+                        </CardSection>
+                        <CardSection>
+                            <View style={containerStyle}>
+                                <Text style={labelStyle}> Activity </Text>
+                                <View style={inputContainerStyles}>
+
+                                    <ModalPicker
+                                        style={{ flex: 1, flexDirection: 'row', }}
+                                        data={data1}
+                                        onChange={(option) => { this.setState({ activity: option.label }) }}>
+
+                                        <Text
+                                            style={valueTextStyle}
+                                        >
+                                            {this.state.activity}
+                                        </Text>
+
+                                    </ModalPicker>
+                                    <Icon
+                                        style={iconStyle}
+                                        name='angle-down' />
+
+                                </View>
+                            </View>
+                        </CardSection>
+                        <CardSection>
+                            <View style={containerStyle}>
+                                <Text style={labelStyle}> Task </Text>
+                                <View style={inputContainerStyles}>
+                                    <TextInput
                                         style={valueTextStyle}
-                                    >
-                                        {this.state.project}
-                                    </Text>
-
-                                </ModalPicker>
-                                <Icon
-                                    style={iconStyle}
-                                    name='angle-down' />
-
+                                        placeholder="Description of Task"
+                                        multiline={false}
+                                        onChangeText={(text) => this.setState({ task: text })}
+                                        value={this.state.task}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </CardSection>
-                    <CardSection>
-                        <View style={containerStyle}>
-                            <Text style={labelStyle}> Activity </Text>
-                            <View style={inputContainerStyles}>
-
-                                <ModalPicker
-                                    style={{ flex: 1, flexDirection: 'row', }}
-                                    data={data}
-                                    onChange={(option) => { this.setState({ activity: option.label }) }}>
-
-                                    <Text
+                        </CardSection>
+                        <CardSection>
+                            <View style={containerStyle}>
+                                <Text style={labelStyle}> Hours </Text>
+                                <View style={inputContainerStyles}>
+                                    <TextInput
                                         style={valueTextStyle}
-                                    >
-                                        {this.state.activity}
-                                    </Text>
-
-                                </ModalPicker>
-                                <Icon
-                                    style={iconStyle}
-                                    name='angle-down' />
-
+                                        placeholder="0.50 (half hour)"
+                                        maxLength={5}
+                                        multiline={false}
+                                        keyboardType='numeric'
+                                        onChangeText={(text) => this.setState({ hour: text })}
+                                        value={this.state.hour}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </CardSection>
-                    <CardSection>
-                        <View style={containerStyle}>
-                            <Text style={labelStyle}> Task </Text>
-                            <View style={inputContainerStyles}>
-                                <TextInput
-                                    style={valueTextStyle}
-                                    placeholder="Description of Task"
-                                    multiline={false}
-                                    onChangeText={(text) => this.setState({ task: text })}
-                                    value={this.state.task}
-                                />
-                            </View>
-                        </View>
-                    </CardSection>
-                    <CardSection>
-                        <View style={containerStyle}>
-                            <Text style={labelStyle}> Hours </Text>
-                            <View style={inputContainerStyles}>
-                                <TextInput
-                                    style={valueTextStyle}
-                                    placeholder="0.50 (half hour)"
-                                    maxLength={5}
-                                    multiline={false}
-                                    keyboardType='numeric'
-                                    onChangeText={(text) => this.setState({ hour: text })}
-                                    value={this.state.hour}
-                                />
-                            </View>
-                        </View>
-                    </CardSection>
-                </Card>
-                <Button
-                    onPress={this.onAddTSPress.bind(this)}
-                    btnStyle={styles.btnStyle}
-                    txtStyle={styles.txtStyle}
-                >
-                    Add
+                        </CardSection>
+                    </Card>
+                    <Button
+                        onPress={this.onAddTSPress.bind(this)}
+                        btnStyle={styles.btnStyle}
+                        txtStyle={styles.txtStyle}
+                    >
+                        Add
                 </Button>
 
-                {this.renderList()}
+                    <ListView
+                        style={styles.listViewContianer}
+                        dataSource={this.state.dataSource}
+                        renderRow={this.renderRow}
+                        enableEmptySections
+                    />
 
-            </View >
+                </View >
+            </ScrollView>
         );
     }
 }
@@ -231,6 +237,7 @@ const styles = {
     },
     cardSty: {
         marginTop: 65,
+        
     },
     listViewContianer: {
         marginTop: 10,

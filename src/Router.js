@@ -5,6 +5,7 @@ import MissingTSList from './components/MissingTSList';
 import { LightSeaGreen } from './colors';
 import CreateTS from './components/logTime/CreateTS';
 import test from './components/logTime/test';
+import test2 from './components/logTime/test2';
 
 const RouterComponent = () => {
     return (
