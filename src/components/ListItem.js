@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { Text, View, TouchableHighlight } from 'react-native';
+import { Text, View, TouchableHighlight, NativeModules } from 'react-native';
 import { darkGreenColor } from '../colors';
 
 class ListItem extends Component {
 
-    onRowPress() {
-        Actions.createTS({ data: this.props.data });
+    onRowPress(data) {
+        // Actions.createTS({ data: this.props.data });
+        // Actions.demoComponent();
+
+        NativeModules.ActivityStarter.navigateToExample(data.name);
     }
 
     render() {
@@ -14,7 +17,7 @@ class ListItem extends Component {
 
         return (
 
-            <TouchableHighlight onPress={this.onRowPress.bind(this)}>
+            <TouchableHighlight onPress={this.onRowPress.bind(this, this.props.data)}>
                 <View>
                     {/* <CardSection> */}
                     <Text style={styles.titleStyle}> {name} </Text>

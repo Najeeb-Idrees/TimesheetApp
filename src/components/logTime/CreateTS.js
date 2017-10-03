@@ -4,7 +4,7 @@ import { Card, CardSection, Button } from '../common';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ModalPicker from 'react-native-modal-picker';
 import CreateTSListItem from './CreateTSListItem';
-
+import Swipeout from 'react-native-swipeout';
 
 class CreateTS extends Component {
 
@@ -16,8 +16,8 @@ class CreateTS extends Component {
         });
 
         this.state = {
-            project: 'Select Project',
-            activity: 'Select Activity',
+            // project: 'Select Project',
+            // activity: 'Select Activity',
             hour: '',
             task: '',
             timesheet: [],
@@ -47,12 +47,43 @@ class CreateTS extends Component {
         console.log('Here button press!');
     }
 
+    deleteNote(rowData) {
+        console.log(`delete ${rowData.time.project}`);
+    }
+    editNote(rowData) {
+        console.log(`edit ${rowData.time.activity}`);
+    }
+
+
     renderRow(data) {
+        const swipeBtns = [
+            {
+                text: 'Edit',
+                backgroundColor: 'gray',
+                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+                onPress: () => { this.editNote(data); }
+            },
+            {
+                text: 'Delete',
+                backgroundColor: 'red',
+                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+                onPress: () => { this.deleteNote(data); }
+            },
+        ];
+
         console.log(`${data}""`);
         return (
-            <CreateTSListItem
-                singleEntry={data.time}
-            />
+            <Swipeout
+                right={swipeBtns}
+                backgroundColor='transparent'
+            >
+                <View>
+                    <CreateTSListItem
+                        singleEntry={data.time}
+                    />
+                </View>
+            </Swipeout>
+
         );
     }
 
@@ -182,9 +213,10 @@ class CreateTS extends Component {
                 </Button>
 
                     <ListView
+                        scrollEnabled
                         style={styles.listViewContianer}
                         dataSource={this.state.dataSource}
-                        renderRow={this.renderRow}
+                        renderRow={this.renderRow.bind(this)}
                         enableEmptySections
                     />
 
@@ -237,7 +269,7 @@ const styles = {
     },
     cardSty: {
         marginTop: 65,
-        
+
     },
     listViewContianer: {
         marginTop: 10,

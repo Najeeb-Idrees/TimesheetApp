@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Keyboard } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Hideo } from 'react-native-textinput-effects';
 import { Actions } from 'react-native-router-flux';
 import { Button, Confirm } from '../../components/common';
+
 export default class LoginForm extends Component {
 
   state = { username: '', password: '', showModal: false };
@@ -15,6 +16,7 @@ export default class LoginForm extends Component {
       console.log(username);
       console.log(password);
 
+      Keyboard.dismiss();
       Actions.main();
     } else if (username === '') {
       Alert.alert('Invalid Field', 'Please enter username');
