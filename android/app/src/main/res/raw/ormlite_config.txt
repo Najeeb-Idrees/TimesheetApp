@@ -1,0 +1,35 @@
+#
+# generated on 2017/10/04 07:20:54
+#
+# --table-start--
+dataClass=com.timesheetapp.model.entities.TimeEntry
+tableName=time_entry
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=_id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=project
+columnName=project
+# --field-end--
+# --field-start--
+fieldName=activity
+columnName=activity
+# --field-end--
+# --field-start--
+fieldName=taskDescription
+columnName=task_description
+# --field-end--
+# --field-start--
+fieldName=hour
+columnName=hour
+# --field-end--
+# --field-start--
+fieldName=is_bookmarked
+columnName=IS_BOOKMARKED
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

@@ -30,17 +30,5 @@ public class MainActivity extends ReactActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-//		MainApplication application = (MainApplication) getApplication();
-//		ReactNativeHost reactNativeHost = application.getReactNativeHost();
-//		ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
-//		DevSupportManager devSupportManager = reactInstanceManager.getDevSupportManager();
-//		devSupportManager.addCustomDevOption("Custom dev option", new DevOptionHandler()
-//		{
-//			@Override
-//			public void onOptionSelected()
-//			{
-//				Toast.makeText(MainActivity.this, "Hello from custom dev option", Toast.LENGTH_SHORT).show();
-//			}
-//		});
 	}
 }

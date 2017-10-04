@@ -2,25 +2,46 @@ package com.timesheetapp.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.timesheetapp.R;
-import com.timesheetapp.util.Constant;
+import com.timesheetapp.events.AddTimeEvent;
+import com.timesheetapp.events.RowListener;
+import com.timesheetapp.model.delegate.TimeEntryDelegate;
+import com.timesheetapp.model.entities.TimeEntry;
+import com.timesheetapp.ui.adapetrs.TimesheetListAdapter;
 
-public class LogTimeActivity extends AppCompatActivity implements View.OnClickListener
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
+
+public class LogTimeActivity extends AppCompatActivity implements View.OnClickListener, RowListener
 {
-	private BottomSheetBehavior mBottomSheetBehavior;
+	//	private LinearLayout add_time_layout;
+	private RecyclerView timesheet_list;
+
+	private boolean fabExpanded = false;
+	private FloatingActionButton fab;
+	private LinearLayout layoutFabBookmark;
+	private LinearLayout layoutFabManual;
+	private ImageView btn_back;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -28,96 +49,186 @@ public class LogTimeActivity extends AppCompatActivity implements View.OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_time);
 
-		View bottomSheet = findViewById(R.id.bottom_sheet);
-		Button button1 = (Button) findViewById(R.id.button_1);
-		Button button2 = (Button) findViewById(R.id.button_2);
-		Button button3 = (Button) findViewById(R.id.button_3);
+		//		add_time_layout = (LinearLayout) findViewById(R.id.add_time_layout);
+		timesheet_list = (RecyclerView) findViewById(R.id.timesheet_list);
+		fab = (FloatingActionButton) findViewById(R.id.fab);
+		layoutFabBookmark = (LinearLayout) findViewById(R.id.layoutFabBookmark);
+		layoutFabManual = (LinearLayout) findViewById(R.id.layoutFabManual);
+//		btn_back = (ImageView) findViewById(R.id.btn_back);
 
-		button1.setOnClickListener(this);
-		button2.setOnClickListener(this);
-		button3.setOnClickListener(this);
+		layoutFabBookmark.setOnClickListener(this);
+		layoutFabManual.setOnClickListener(this);
+		fab.setOnClickListener(this);
+//		btn_back.setOnClickListener(this);
 
-		mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+		closeSubMenusFab();
+		setUpList();
+	}
+
+	private void setUpList()
+	{
+		List<TimeEntry> timeEntryList = new TimeEntryDelegate().getAll();
+		final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(timeEntryList, this);
+
+		RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+		timesheet_list.setLayoutManager(mLayoutManager);
+		timesheet_list.setItemAnimator(new DefaultItemAnimator());
+		timesheet_list.setAdapter(timesheetListAdapter);
+	}
+
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		EventBus.getDefault().register(this);
 	}
 
 	@Override
+	public void onStop()
+	{
+		super.onStop();
+		EventBus.getDefault().unregister(this);
+	}
+
+
 	public void onClick(View v)
 	{
 		switch (v.getId())
 		{
-			case R.id.button_1:
+			case R.id.fab:
 			{
-				//				mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-				//				break;
-				TutsPlusBottomSheetDialogFragment bottomSheetDialogFragment = new TutsPlusBottomSheetDialogFragment();
-				bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+				if (fabExpanded == true)
+				{
+					closeSubMenusFab();
+				}
+				else
+				{
+					openSubMenusFab();
+				}
 				break;
 			}
-			case R.id.button_2:
+			case R.id.layoutFabBookmark:
 			{
-				showDialog();
+				launchNewFragment(new BookmarkedTSFragment());
+				closeSubMenusFab();
+				break;
+			}
+
+			case R.id.layoutFabManual:
+			{
+				BottomSheetDialogFragment bottomSheetDialogFragment = new LogTimeBSFragment();
+				bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+				closeSubMenusFab();
+				break;
+			}
+			case R.id.btn_back:
+			{
+				finish();
 			}
 		}
 	}
 
-	private void showDialog()
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onAddTimeEventEvent(AddTimeEvent event)
 	{
-		//		final String listItems[] = new String[10];
-		//		listItems[0] = "August Corrales - UMC";
-		//		listItems[1] = "August Corrales - Hospital 2";
-		//		listItems[2] = "August Corrales - Hospital 3";
-		//		listItems[3] = "August Corrales - UMC";
-		//		listItems[4] = "August Corrales - Hospital 2";
-		//		listItems[5] = "August Corrales - Hospital 3";
-		//		listItems[6] = "August Corrales - UMC";
-		//		listItems[7] = "August Corrales - Hospital 2";
-		//		listItems[8] = "August Corrales - Hospital 3";
+		if (event.isAdded())
+		{
+			Log.i("Time Added", event.isAdded() + " ");
+			setUpList();
+		}
+	}
 
-		final CharSequence[] items = {"A", "B", "C"};
+	@Override
+	public void rowTap(Object agr, int pos)
+	{
+		showOptionDialog((TimeEntry) agr);
+	}
+
+	@Override
+	public void rowLongPress(Object agr, int pos)
+	{
+		showOptionDialog((TimeEntry) agr);
+	}
+
+	private void showOptionDialog(final TimeEntry timeEntry)
+	{
+		final CharSequence[] items = {
+				"Bookmark",
+				"Edit",
+				"Delete"};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Make your selection");
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				// Do something with the selection
-//				mDoneButton.setText(items[item]);
+		builder.setItems(items, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int item)
+			{
+				if (item == 0)
+				{
+					markFrequentlyTE(timeEntry);
+				}
+				else if (item == 1)
+				{
+					editTE(timeEntry);
+				}
+				else if (item == 2)
+				{
+					deleteTE(timeEntry);
+				}
 			}
 		});
 		AlertDialog alert = builder.create();
+		alert.setCancelable(true);
+		alert.setCanceledOnTouchOutside(true);
 		alert.show();
+	}
 
-//		String names[] = {"A", "B", "C", "D"};
-//		AlertDialog.Builder alertDialog = new AlertDialog.Builder(LogTimeActivity.this);
-//		LayoutInflater inflater = getLayoutInflater();
-//		View convertView = (View) inflater.inflate(R.layout.custom, null);
-//		alertDialog.setView(convertView);
-//		alertDialog.setTitle("List");
-//		ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-//		lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//		{
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//			{
-//
-//			}
-//		});
-//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
-//		lv.setAdapter(adapter);
-//		alertDialog.show();
+	public void editTE(TimeEntry timeEntry)
+	{
+		BottomSheetDialogFragment bottomSheetDialogFragment = LogTimeBSFragment.newInstance(timeEntry);
+		bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+	}
 
-		//		AlertDialog.Builder facilitiesDialog = new AlertDialog.Builder(this);
-		//		facilitiesDialog.setTitle("Select Project");
-		//		facilitiesDialog.setCancelable(false);
-		//		facilitiesDialog.setItems(listItems,
-		//				new DialogInterface.OnClickListener()
-		//				{
-		//					@Override
-		//					public void onClick(DialogInterface dialog, int which)
-		//					{
-		//
-		//					}
-		//				});
-		//
-		//		facilitiesDialog.show();
+	private void deleteTE(TimeEntry timeEntry)
+	{
+		new TimeEntryDelegate().delete(timeEntry);
+		setUpList();
+	}
+
+	private void markFrequentlyTE(TimeEntry timeEntry)
+	{
+		timeEntry.setIs_bookmarked(true);
+		new TimeEntryDelegate().update(timeEntry);
+	}
+
+	//closes FAB submenus
+	private void closeSubMenusFab()
+	{
+		layoutFabManual.setVisibility(View.INVISIBLE);
+		layoutFabBookmark.setVisibility(View.INVISIBLE);
+		fab.setImageResource(R.drawable.icon_add);
+		fabExpanded = false;
+	}
+
+	//Opens FAB submenus
+	private void openSubMenusFab()
+	{
+		layoutFabManual.setVisibility(View.VISIBLE);
+		layoutFabBookmark.setVisibility(View.VISIBLE);
+		//Change settings icon to 'X' icon
+		fab.setImageResource(R.drawable.icon_close);
+		fabExpanded = true;
+	}
+
+
+	public void launchNewFragment(Fragment fragment)
+	{
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+		fragmentTransaction.replace(R.id.fragment_container, fragment, "");
+		fragmentTransaction.addToBackStack(null);
+		fragmentTransaction.commit();
 	}
 }
