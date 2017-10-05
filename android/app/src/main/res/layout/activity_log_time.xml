@@ -2,42 +2,34 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/white">
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fab"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|end"-->
-    <!--android:layout_margin="16dp"-->
-    <!--android:src="@drawable/icon_add"/>-->
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/LightSeaGreen"
+        android:elevation="5dp">
 
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:src="@drawable/arrow_back"/>
 
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="@color/LightSeaGreen"-->
-        <!--android:elevation="5dp">-->
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Log Time"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
-        <!--<ImageView-->
-            <!--android:id="@+id/btn_back"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:padding="5dp"-->
-            <!--android:src="@drawable/arrow_back"/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:text="Log Time"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="16sp"-->
-            <!--android:textStyle="bold"/>-->
-
-    <!--</RelativeLayout>-->
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/timesheet_list"
@@ -54,30 +46,8 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
     </FrameLayout>
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/add_time_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@color/light_grey"-->
-    <!--android:orientation="vertical"-->
-    <!--android:padding="5dp">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="center"-->
-    <!--android:src="@drawable/add_icon"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="center"-->
-    <!--android:text="Add Time"-->
-    <!--android:textSize="16sp"/>-->
-
-    <!--</LinearLayout>-->
 
 </RelativeLayout>

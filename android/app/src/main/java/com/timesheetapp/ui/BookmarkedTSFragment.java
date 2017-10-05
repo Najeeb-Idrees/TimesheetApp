@@ -23,10 +23,9 @@ import java.util.List;
  * Created by Najeeb.Idrees on 04-Oct-17.
  */
 
-public class BookmarkedTSFragment extends Fragment implements RowListener, View.OnClickListener
+public class BookmarkedTSFragment extends Fragment implements RowListener
 {
 	private RecyclerView bookmarked_ts_list;
-	private ImageView btn_back;
 
 	@Nullable
 	@Override
@@ -35,9 +34,8 @@ public class BookmarkedTSFragment extends Fragment implements RowListener, View.
 		View v = inflater.inflate(R.layout.fragment_bookmarked, container, false);
 
 		bookmarked_ts_list = v.findViewById(R.id.bookmarked_ts_list);
-		btn_back = v.findViewById(R.id.btn_back);
 
-		btn_back.setOnClickListener(this);
+		((LogTimeActivity) getActivity()).toolbar_title.setText(String.valueOf("Bookmarked List"));
 		setUpList();
 
 		return v;
@@ -65,14 +63,5 @@ public class BookmarkedTSFragment extends Fragment implements RowListener, View.
 	public void rowLongPress(Object agr, int pos)
 	{
 
-	}
-
-	@Override
-	public void onClick(View view)
-	{
-		if (view.getId() == R.id.btn_back)
-		{
-			getFragmentManager().popBackStack();
-		}
 	}
 }

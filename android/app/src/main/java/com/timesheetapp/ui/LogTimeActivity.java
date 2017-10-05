@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.timesheetapp.R;
 import com.timesheetapp.events.AddTimeEvent;
@@ -40,7 +41,9 @@ public class LogTimeActivity extends AppCompatActivity implements View.OnClickLi
 	private FloatingActionButton fab;
 	private LinearLayout layoutFabBookmark;
 	private LinearLayout layoutFabManual;
-	private ImageView btn_back;
+
+	public ImageView btn_back;
+	public TextView toolbar_title;
 
 
 	@Override
@@ -49,17 +52,17 @@ public class LogTimeActivity extends AppCompatActivity implements View.OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_time);
 
-		//		add_time_layout = (LinearLayout) findViewById(R.id.add_time_layout);
 		timesheet_list = (RecyclerView) findViewById(R.id.timesheet_list);
 		fab = (FloatingActionButton) findViewById(R.id.fab);
 		layoutFabBookmark = (LinearLayout) findViewById(R.id.layoutFabBookmark);
 		layoutFabManual = (LinearLayout) findViewById(R.id.layoutFabManual);
-//		btn_back = (ImageView) findViewById(R.id.btn_back);
+		btn_back = (ImageView) findViewById(R.id.btn_back);
+		toolbar_title = (TextView) findViewById(R.id.toolbar_title);
 
 		layoutFabBookmark.setOnClickListener(this);
 		layoutFabManual.setOnClickListener(this);
 		fab.setOnClickListener(this);
-//		btn_back.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 
 		closeSubMenusFab();
 		setUpList();
@@ -125,7 +128,20 @@ public class LogTimeActivity extends AppCompatActivity implements View.OnClickLi
 			}
 			case R.id.btn_back:
 			{
-				finish();
+				int noOfFrgmts = getSupportFragmentManager().getBackStackEntryCount();
+				Log.d("Number of Fragments", String.valueOf(noOfFrgmts));
+				if (noOfFrgmts > 0)
+				{
+					getSupportFragmentManager().popBackStack();
+					if (noOfFrgmts == 1)
+					{
+						toolbar_title.setText(String.valueOf("Log Time"));
+					}
+				}
+				else
+				{
+					finish();
+				}
 			}
 		}
 	}
@@ -227,8 +243,8 @@ public class LogTimeActivity extends AppCompatActivity implements View.OnClickLi
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-		fragmentTransaction.replace(R.id.fragment_container, fragment, "");
-		fragmentTransaction.addToBackStack(null);
+		fragmentTransaction.replace(R.id.fragment_container, fragment, fragment.getTag());
+		fragmentTransaction.addToBackStack(fragment.getClass().getName());
 		fragmentTransaction.commit();
 	}
 }
